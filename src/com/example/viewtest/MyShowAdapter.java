@@ -45,7 +45,7 @@ public class MyShowAdapter extends BaseAdapter {
     	if (mData == null) {
             mData = new LinkedList();
         }
-        mData.add(data);
+        mData.add(0, data);
         notifyDataSetChanged();
     }
     
