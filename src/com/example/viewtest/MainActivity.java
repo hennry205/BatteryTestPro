@@ -165,7 +165,7 @@ public  class MainActivity extends Activity  {
 		}
 		
 		if(myTimer != null && myTask != null)
-		    myTimer.schedule(myTask,200,3*1000);
+		    myTimer.schedule(myTask, 500,10*1000);
 	}
 	
 	//Í£Ö¹¶¨Ê±Æ÷
