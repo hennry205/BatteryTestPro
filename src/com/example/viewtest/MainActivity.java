@@ -102,7 +102,7 @@ public  class MainActivity extends Activity  {
         wlockbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            	Log.i(TAG, "Stop Timer.");
+            	Log.i(TAG, "wlock_flag: " + wlock_flag);
             	if(wlock_flag == 0){
             		wlock_flag = 1;
             		wlock.acquire();
