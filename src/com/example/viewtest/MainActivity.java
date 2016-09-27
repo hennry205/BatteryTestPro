@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -146,8 +147,9 @@ public  class MainActivity extends Activity  {
 		    				batt_temp = Integer.parseInt(getProperty(BATT_TEMP_PATH));
 		    				
 		    				//格式化生成字符串
-		    				batt_info=String.format("%12d %12d %12d %12d %12d",
-		    						timer_cnt, batt_soc,batt_vol,batt_ma,batt_temp);
+		    				//batt_info=String.format("%12d %s %12d %12d %12d %12d",timer_cnt, getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp);
+		    				batt_info=String.format("%s %10d %10d %10d %10d",
+		    						getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp);
 		    				
 		    				Log.i(TAG, "batt_soc:" + batt_soc + " batt_vol:" + batt_vol + " batt_ma:" + batt_ma + " batt_temp:" + batt_temp);
 		    				
@@ -244,6 +246,26 @@ public  class MainActivity extends Activity  {
 
     }
     
+	public static String getFontDateTime(){
+		Calendar c = Calendar.getInstance();
+		
+		String year  = c.get(Calendar.YEAR) + "";
+		String month = (c.get(Calendar.MONTH)+1) + "";
+		String date  = c.get(Calendar.DATE)+"/";
+		String day   = c.get(Calendar.HOUR_OF_DAY) + ":";
+		String minute = c.get(Calendar.MINUTE) + ":";
+		String second = c.get(Calendar.SECOND) + "";
+		
+		String dateTime = year
+				+ (month.length()==1?"0"+month:month)
+				+ (date.length()==1?"0"+date:date)
+				+ (day.length()==1?"0"+day:day)
+				+ (minute.length()==1?"0"+minute:minute)
+				+ (second.length()==1?"0"+second:second);
+		
+		return dateTime;
+	}
+	
     //这里横竖屏切换是横屏和竖屏采用相同布局
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
