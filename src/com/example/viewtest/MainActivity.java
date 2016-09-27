@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -47,6 +48,9 @@ public  class MainActivity extends Activity  {
 	private String filepath="/sdcard/battery_data.txt";
 	private int wlock_flag = 0;
 	private PowerManager.WakeLock wlock;
+	
+	private  Button startbtn;
+	private  Button stopbtn;
 	
 	private String batt_info=null;
 	
@@ -79,21 +83,25 @@ public  class MainActivity extends Activity  {
 		StartTimer();
 				
 		//得到按钮实例
-        Button startbtn = (Button)findViewById(R.id.btn_start);
+        startbtn = (Button)findViewById(R.id.btn_start);
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             	Log.i(TAG, "Start Timer.");
+            	startbtn.setBackgroundColor(Color.parseColor("#669933"));
+            	stopbtn.setBackgroundColor(Color.parseColor("#666666"));
             	StartTimer();
             }
         });
         
       //得到按钮实例
-        Button stopbtn = (Button)findViewById(R.id.btn_stop);
+        stopbtn = (Button)findViewById(R.id.btn_stop);
         stopbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             	Log.i(TAG, "Stop Timer.");
+            	stopbtn.setBackgroundColor(Color.parseColor("#669933"));
+            	startbtn.setBackgroundColor(Color.parseColor("#666666"));
             	StopTimer();
             }
         });
