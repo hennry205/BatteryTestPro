@@ -79,11 +79,13 @@ public  class MainActivity extends Activity  {
 		show.setAdapter(myadapter);
 		
 		writeFile2Sdcard("index batt_soc  batt_vol  batt_ma  batt_temp", false);
+		
 		//启动定时器
 		StartTimer();
 				
 		//得到按钮实例
         startbtn = (Button)findViewById(R.id.btn_start);
+        startbtn.setBackgroundColor(Color.parseColor("#669933"));
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
