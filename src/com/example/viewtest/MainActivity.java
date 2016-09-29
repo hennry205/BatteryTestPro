@@ -45,7 +45,6 @@ public  class MainActivity extends Activity  {
 	private OutputStream out = null;
 	private OutputStream datafile = null;
 	private long timer_cnt=0;
-	private String filepath="/sdcard/battery_data.txt";
 	private int wlock_flag = 0;
 	private PowerManager.WakeLock wlock;
 	
@@ -54,11 +53,12 @@ public  class MainActivity extends Activity  {
 	
 	private String batt_info=null;
 	
-	private String BATT_SOC_PATH = "sys/class/power_supply/battery/capacity";
-	private String BATT_VOL_PATH = "sys/class/power_supply/battery/voltage_now";
-	private String BATT_CURRENT_PATH = "sys/class/power_supply/battery/current_now";
-	private String BATT_TEMP_PATH = "sys/class/power_supply/battery/temp";
-	private String USB_VOL_PATH = "sys/class/power_supply/usb/voltage_now";
+	private final String LOG_FILE_PATH="/sdcard/battery_data.txt";
+	private final String BATT_SOC_PATH = "sys/class/power_supply/battery/capacity";
+	private final String BATT_VOL_PATH = "sys/class/power_supply/battery/voltage_now";
+	private final String BATT_CURRENT_PATH = "sys/class/power_supply/battery/current_now";
+	private final String BATT_TEMP_PATH = "sys/class/power_supply/battery/temp";
+	private final String USB_VOL_PATH = "sys/class/power_supply/usb/voltage_now";
 	private int batt_soc,batt_vol,batt_ma,batt_temp;
 	private int usb_vol;
 	
@@ -238,7 +238,7 @@ public  class MainActivity extends Activity  {
     	try{
     		FileWriter writer = null;
             
-            writer = new FileWriter(filepath, append);     
+            writer = new FileWriter(LOG_FILE_PATH, append);     
             writer.write(str);
             writer.append("\n");
             writer.flush();
