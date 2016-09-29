@@ -35,7 +35,7 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="50dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="时间" />
@@ -67,6 +67,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="温度" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="VBUS" />
 
     </LinearLayout>
 

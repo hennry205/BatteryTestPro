@@ -58,7 +58,9 @@ public  class MainActivity extends Activity  {
 	private String BATT_VOL_PATH = "sys/class/power_supply/battery/voltage_now";
 	private String BATT_CURRENT_PATH = "sys/class/power_supply/battery/current_now";
 	private String BATT_TEMP_PATH = "sys/class/power_supply/battery/temp";
+	private String USB_VOL_PATH = "sys/class/power_supply/usb/voltage_now";
 	private int batt_soc,batt_vol,batt_ma,batt_temp;
+	private int usb_vol;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,13 +157,15 @@ public  class MainActivity extends Activity  {
 		    				batt_vol = Integer.parseInt(getProperty(BATT_VOL_PATH))/1000;
 		    				batt_ma = Integer.parseInt(getProperty(BATT_CURRENT_PATH))/1000;
 		    				batt_temp = Integer.parseInt(getProperty(BATT_TEMP_PATH));
+		    				usb_vol = Integer.parseInt(getProperty(USB_VOL_PATH))/1000;
 		    				
 		    				//格式化生成字符串
 		    				//batt_info=String.format("%12d %s %12d %12d %12d %12d",timer_cnt, getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp);
-		    				batt_info=String.format("%s %10d %10d %10d %10d",
-		    						getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp);
+		    				batt_info=String.format("%s %8d %8d %8d %8d %8d",
+		    						getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				
-		    				Log.i(TAG, "batt_soc:" + batt_soc + " batt_vol:" + batt_vol + " batt_ma:" + batt_ma + " batt_temp:" + batt_temp);
+		    				Log.i(TAG, "batt_soc:" + batt_soc + " batt_vol:" + batt_vol + 
+		    						" batt_ma:" + batt_ma + " batt_temp:" + batt_temp + "usb_vol:" + usb_vol);
 		    				
 		    				//将数据写入到sdcard
 		    				writeFile2Sdcard(batt_info, true);
@@ -266,8 +270,7 @@ public  class MainActivity extends Activity  {
 		String minute = c.get(Calendar.MINUTE) + ":";
 		String second = c.get(Calendar.SECOND) + "";
 		
-		String dateTime = year
-				+ (month.length()==1?"0"+month:month)
+		String dateTime = (month.length()==1?"0"+month:month)
 				+ (date.length()==1?"0"+date:date)
 				+ (day.length()==1?"0"+day:day)
 				+ (minute.length()==1?"0"+minute:minute)
