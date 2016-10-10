@@ -59,8 +59,17 @@ public  class MainActivity extends Activity  {
 	private final String BATT_CURRENT_PATH = "sys/class/power_supply/battery/current_now";
 	private final String BATT_TEMP_PATH = "sys/class/power_supply/battery/temp";
 	private final String USB_VOL_PATH = "sys/class/power_supply/usb/voltage_now";
+	
+	private final String CAT_BATT_SOC_PATH = "cat /sys/class/power_supply/battery/capacity";
+	private final String CAT_BATT_VOL_PATH = "cat /sys/class/power_supply/battery/voltage_now";
+	private final String CAT_BATT_CURRENT_PATH = "cat /sys/class/power_supply/battery/current_now";
+	private final String CAT_BATT_TEMP_PATH = "cat /sys/class/power_supply/battery/temp";
+	private final String CAT_USB_VOL_PATH = "cat /sys/class/power_supply/usb/voltage_now";
+	
+	private String cmdErrResult;
 	private int batt_soc,batt_vol,batt_ma,batt_temp;
 	private int usb_vol;
+	private final boolean use_shell_cmd = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -153,11 +162,34 @@ public  class MainActivity extends Activity  {
 		    				timer_cnt++;
 		    				
 		    				//将读取的字符串数据转换为数值
-		    				batt_soc = Integer.parseInt(getProperty(BATT_SOC_PATH));
-		    				batt_vol = Integer.parseInt(getProperty(BATT_VOL_PATH))/1000;
-		    				batt_ma = Integer.parseInt(getProperty(BATT_CURRENT_PATH))/1000;
-		    				batt_temp = Integer.parseInt(getProperty(BATT_TEMP_PATH));
-		    				usb_vol = Integer.parseInt(getProperty(USB_VOL_PATH))/1000;
+		    				if(use_shell_cmd){
+		    					
+		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_SOC_PATH, false).errorMsg;
+		    					if(cmdErrResult.length() == 0)
+		    						batt_soc = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_SOC_PATH, false).successMsg);
+		    					
+		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_VOL_PATH, false).errorMsg;
+		    					if(cmdErrResult.length() == 0)
+		    						batt_vol = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_VOL_PATH, false).successMsg)/1000;
+		    					
+		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_CURRENT_PATH, false).errorMsg;
+		    					if(cmdErrResult.length() == 0)
+		    						batt_ma = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_CURRENT_PATH, false).successMsg)/1000;
+		    					
+		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_TEMP_PATH, false).errorMsg;
+		    					if(cmdErrResult.length() == 0)
+		    						batt_temp = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_TEMP_PATH, false).successMsg);
+		    					
+		    					cmdErrResult = ShellUtils.execCommand(CAT_USB_VOL_PATH, false).errorMsg;
+		    					if(cmdErrResult.length() == 0)
+		    					    usb_vol = Integer.parseInt(ShellUtils.execCommand(CAT_USB_VOL_PATH, false).successMsg)/1000;
+		    				}else{
+		    					batt_soc = Integer.parseInt(getProperty(BATT_SOC_PATH));
+		    					batt_vol = Integer.parseInt(getProperty(BATT_VOL_PATH))/1000;
+		    					batt_ma = Integer.parseInt(getProperty(BATT_CURRENT_PATH))/1000;
+		    					batt_temp = Integer.parseInt(getProperty(BATT_TEMP_PATH));
+		    					usb_vol = Integer.parseInt(getProperty(USB_VOL_PATH))/1000;
+		    				}
 		    				
 		    				//格式化生成字符串
 		    				//batt_info=String.format("%12d %s %12d %12d %12d %12d",timer_cnt, getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp);
