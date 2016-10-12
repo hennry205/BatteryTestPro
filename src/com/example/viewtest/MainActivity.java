@@ -47,6 +47,7 @@ public  class MainActivity extends Activity  {
 	private long timer_cnt=0;
 	private int wlock_flag = 0;
 	private PowerManager.WakeLock wlock;
+	private PowerManager.WakeLock wlock_lcd;
 	
 	private  Button startbtn;
 	private  Button stopbtn;
@@ -79,7 +80,10 @@ public  class MainActivity extends Activity  {
 		setContentView(R.layout.activity_main);
 		
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wlock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "battery_monitor");
+		wlock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "battery_monitor1");
+		
+		PowerManager pm_lcd = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wlock_lcd = pm_lcd.newWakeLock( PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "battery_monitor2");
 		
 		//ªÒ»°Adapter
 		myadapter = new MyShowAdapter(this);
@@ -128,10 +132,12 @@ public  class MainActivity extends Activity  {
             	if(wlock_flag == 0){
             		wlock_flag = 1;
             		wlock.acquire();
+            		wlock_lcd.acquire();
             		wlockbtn.setText("Ω˚÷π–›√ﬂ");
             	}else{
             		wlock_flag = 0;
             		wlock.release();
+            		wlock_lcd.release();
             		wlockbtn.setText("‘ –Ì–›√ﬂ");
             		
             	}
