@@ -103,7 +103,7 @@ public  class MainActivity extends Activity  {
 		//将ListView与Adapter关联
 		show.setAdapter(myadapter);
 		
-		writeFile2Sdcard("time batt_soc  batt_vol  batt_ma  batt_temp", false);
+		writeFile2Sdcard("time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		
 		//启动定时器
 		StartTimer();
