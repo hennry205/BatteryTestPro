@@ -33,6 +33,7 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -75,6 +76,11 @@ public  class MainActivity extends Activity  {
 	private int usb_vol;
 	private final boolean use_shell_cmd = true;
 	
+	final private int MENU_ABOUT = 1;
+	final private int MENU_HELP = 2;
+	
+	final private String VerInfo = "版本V1.0-2016/10/19";
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -362,6 +368,32 @@ public  class MainActivity extends Activity  {
     }; 
 	
 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+    	menu.add(1, MENU_ABOUT, 1, VerInfo);
+    	menu.add(1, MENU_ABOUT, 2, "帮助");
+    	
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id){
+            case MENU_ABOUT:
+            	Log.i(TAG, "click about");
+                break;
+            case MENU_HELP:
+            	Log.i(TAG, "click help");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
     //这里横竖屏切换是横屏和竖屏采用相同布局
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
