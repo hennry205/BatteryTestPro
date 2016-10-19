@@ -48,7 +48,7 @@ public  class MainActivity extends Activity  {
 	private Data  sData;
 	private OutputStream out = null;
 	private OutputStream datafile = null;
-	private long timer_cnt=0;
+	private double timer_cnt=0;
 	private int wlock_flag = 0;
 	private PowerManager.WakeLock wlock;
 	private PowerManager.WakeLock wlock_lcd;
@@ -57,6 +57,7 @@ public  class MainActivity extends Activity  {
 	private  Button stopbtn;
 	
 	private String batt_info=null;
+	private String file_batt_info=null;
 	
 	private final String LOG_FILE_PATH="/sdcard/battery_data.txt";
 	private final String BATT_SOC_PATH = "sys/class/power_supply/battery/capacity";
@@ -102,7 +103,7 @@ public  class MainActivity extends Activity  {
 		//将ListView与Adapter关联
 		show.setAdapter(myadapter);
 		
-		writeFile2Sdcard("index batt_soc  batt_vol  batt_ma  batt_temp", false);
+		writeFile2Sdcard("time batt_soc  batt_vol  batt_ma  batt_temp", false);
 		
 		//启动定时器
 		StartTimer();
@@ -174,7 +175,7 @@ public  class MainActivity extends Activity  {
 		    		runOnUiThread(new Runnable(){  
 		    			@Override  
 		    			public void run() {  
-		    				timer_cnt++;
+		    				timer_cnt += 10;
 		    				
 		    				//将读取的字符串数据转换为数值
 		    				if(use_shell_cmd){
@@ -208,14 +209,16 @@ public  class MainActivity extends Activity  {
 		    				
 		    				//格式化生成字符串
 		    				//batt_info=String.format("%12d %s %12d %12d %12d %12d",timer_cnt, getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp);
-		    				batt_info=String.format("%s %8d %8d %8d %8d %8d",
+		    				batt_info = String.format("%s %8d %8d %8d %8d %8d",
 		    						getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				
 		    				Log.i(TAG, "batt_soc:" + batt_soc + " batt_vol:" + batt_vol + 
 		    						" batt_ma:" + batt_ma + " batt_temp:" + batt_temp + "usb_vol:" + usb_vol);
 		    				
+		    				file_batt_info = String.format("%6.1f %8d %8d %8d %8d %8d",
+		    						timer_cnt/60, batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				//将数据写入到sdcard
-		    				writeFile2Sdcard(batt_info, true);
+		    				writeFile2Sdcard(file_batt_info, true);
 		    				
 		    				//将数据更新到手机listview界面显示
 		    				sData = new Data(batt_info);
@@ -311,7 +314,7 @@ public  class MainActivity extends Activity  {
 		Calendar c = Calendar.getInstance();
 		
 		String year  = c.get(Calendar.YEAR) + "";
-		String month = (c.get(Calendar.MONTH)+1) + "";
+		String month = (c.get(Calendar.MONTH)+1) + "-";
 		String date  = c.get(Calendar.DATE)+"/";
 		String day   = c.get(Calendar.HOUR_OF_DAY) + ":";
 		String minute = c.get(Calendar.MINUTE) + ":";
