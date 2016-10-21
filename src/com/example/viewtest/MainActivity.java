@@ -297,10 +297,10 @@ public  class MainActivity extends Activity  {
 
 	}
 	
-	 public static boolean createDir(String destDirName) {
+	 public boolean createDir(String destDirName) {
 	        File dir = new File(destDirName);
 	        if (dir.exists()) {
-	            System.out.println("创建目录" + destDirName + "失败，目标目录已经存在");
+	        	Log.i(TAG,"Creat dir:" + destDirName + " it is already exist");
 	            return false;
 	        }
 	        if (!destDirName.endsWith(File.separator)) {
@@ -308,10 +308,10 @@ public  class MainActivity extends Activity  {
 	        }
 	        //创建目录
 	        if (dir.mkdirs()) {
-	            System.out.println("创建目录" + destDirName + "成功！");
+	        	Log.i(TAG,"Creat dir:" + destDirName + " successful!");
 	            return true;
 	        } else {
-	            System.out.println("创建目录" + destDirName + "失败！");
+	        	Log.i(TAG,"Creat dir:" + destDirName + " failed!");
 	            return false;
 	        }
 	}
