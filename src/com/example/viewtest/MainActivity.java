@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public  class MainActivity extends Activity  {
@@ -53,6 +54,7 @@ public  class MainActivity extends Activity  {
 	private int wlock_flag = 0;
 	private PowerManager.WakeLock wlock;
 	private PowerManager.WakeLock wlock_lcd;
+	private TextView statusView;
 	
 	private  Button startbtn;
 	private  Button stopbtn;
@@ -96,6 +98,8 @@ public  class MainActivity extends Activity  {
 	//true: log保存到/sdcard/battery_data.txt
 	//false: log保存到/sdcard/batterytest/batterydata-$(data).txt
 	private boolean RootLogFile = false;
+	
+	private int perTime_sec = 10;
 	//--------------------------------------------------------------------
     
 	@Override
@@ -196,6 +200,13 @@ public  class MainActivity extends Activity  {
             }
         });
         
+        //----------------------------------------------------------------
+        //初始化状态栏
+        statusView = (TextView) findViewById(R.id.statusView); 
+        //设置textview背景颜色
+        //statusView.setBackgroundColor (android.graphics.Color.GRAY);
+        showStatusView("OK");
+        
 		//----------------------------------------------------------------
 		//启动定时器
 		StartTimer();
@@ -207,7 +218,9 @@ public  class MainActivity extends Activity  {
 		
 		if(myTimer != null && myTask != null)
 			return;
-			
+		
+		showStatusView("OK");
+		
 		if(myTimer == null)
 			myTimer = new Timer();
 		
@@ -276,7 +289,7 @@ public  class MainActivity extends Activity  {
 		}
 		
 		if(myTimer != null && myTask != null)
-		    myTimer.schedule(myTask, 500,10*1000);
+		    myTimer.schedule(myTask, 500, perTime_sec * 1000);
 	}
 	
 	//停止定时器
@@ -293,6 +306,8 @@ public  class MainActivity extends Activity  {
 			myTask.cancel();
 			myTask = null;
 		}
+		
+		showStatusView("Stop");
 	}
 	
 	 public boolean createDir(String destDirName) {
@@ -334,7 +349,7 @@ public  class MainActivity extends Activity  {
     }   
     
 	//从设备节点获取状态参数
-    private static String getProperty(String path) {
+    private String getProperty(String path) {
         String prop = "0";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -344,6 +359,12 @@ public  class MainActivity extends Activity  {
         }
         
         return prop;
+    }
+    
+    private void showStatusView(String strInfo) {
+    	
+    	statusView.setText("Status: " + strInfo);
+    	return;
     }
     
     //将数据写入到sd卡文件中
@@ -359,9 +380,11 @@ public  class MainActivity extends Activity  {
             
     	} catch (IOException e){
     		Log.i(TAG,"IOException Error!"); 
+    		showStatusView("Save File Fail, IOException Error!");
     		e.printStackTrace();
     	} catch (Exception e){
     		Log.i(TAG,"Exception Error!");
+    		showStatusView("Save File Fail,File Exception Error!");
     		e.printStackTrace();
     	} finally {
     		try{
