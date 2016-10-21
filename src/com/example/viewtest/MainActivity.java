@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public  class MainActivity extends Activity  {
 
@@ -59,10 +60,6 @@ public  class MainActivity extends Activity  {
 	private String batt_info=null;
 	private String file_batt_info=null;
 	
-	private final String LOG_FILE_PATH="/sdcard/battery_data.txt";
-	private final String LOG_DIR_PATH="/sdcard/batterytest/";
-	private String LOG_DFILE_PATH;
-	
 	private final String BATT_SOC_PATH = "sys/class/power_supply/battery/capacity";
 	private final String BATT_VOL_PATH = "sys/class/power_supply/battery/voltage_now";
 	private final String BATT_CURRENT_PATH = "sys/class/power_supply/battery/current_now";
@@ -83,38 +80,76 @@ public  class MainActivity extends Activity  {
 	final private int MENU_ABOUT = 1;
 	final private int MENU_HELP = 2;
 	
-	final private String VerInfo = "版本V1.0-2016/10/19";
+	private AlertDialog dialog_verinfo;
+	
+	private final String LOG_FILE_PATH="/sdcard/battery_data.txt";
+	private final String LOG_DIR_PATH="/sdcard/batterytest/";
+	private String LOG_DFILE_PATH;
+	private String save_log_file;
+	
+	final private String VerInfo1 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/batterytest/";
+	final private String VerInfo2 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/";
+	private String VerInfo;
+	
+	//--------------------------------------------------------------------
+	//Config  log保存目录
+	//true: log保存到/sdcard/battery_data.txt
+	//false: log保存到/sdcard/batterytest/batterydata-$(data).txt
+	private boolean RootLogFile = false;
+	
+	//--------------------------------------------------------------------
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
 		//加载主界面布局activity_main.xml
 		setContentView(R.layout.activity_main);
 		
+		//----------------------------------------------------------------
+		//获取休眠锁
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wlock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "battery_monitor1");
-		
+		//获取禁止息屏锁
 		PowerManager pm_lcd = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wlock_lcd = pm_lcd.newWakeLock( PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "battery_monitor2");
 		
+		//----------------------------------------------------------------
 		//获取Adapter
 		myadapter = new MyShowAdapter(this);
-		
 		//根据ID找到activity_main.xml中的ListView
 		show = (ListView) findViewById(R.id.lv_show);
 		//将ListView与Adapter关联
 		show.setAdapter(myadapter);
 		
-		createDir(LOG_DIR_PATH);
-		LOG_DFILE_PATH = LOG_DIR_PATH + "battery_data-" + getFileDateTime() + ".txt";
+		//----------------------------------------------------------------
+		//判断log文件保存路径
+		if(RootLogFile){
+			save_log_file = LOG_FILE_PATH;
+			VerInfo = VerInfo2;
+		}else{
+			createDir(LOG_DIR_PATH);
+			LOG_DFILE_PATH = LOG_DIR_PATH + "battery_data-" + getFileDateTime() + ".txt";
+			save_log_file = LOG_DFILE_PATH;
+			VerInfo = VerInfo1;
+		}
 		Log.i(TAG, "LOG_DFILE_PATH: " + LOG_DFILE_PATH);
-		writeFile2Sdcard(LOG_DFILE_PATH, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
+		writeFile2Sdcard(save_log_file, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		
-		//启动定时器
-		StartTimer();
+		//----------------------------------------------------------------
+		//点击  关于 菜单对话框
+		// 创建退出对话框  
+		dialog_verinfo = new AlertDialog.Builder(this).create();  
+        // 设置对话框标题  
+		dialog_verinfo.setTitle("关于");  
+        // 设置对话框消息  
+		dialog_verinfo.setMessage(VerInfo);  
+        // 添加选择按钮并注册监听  
+		dialog_verinfo.setButton("确定", menu_listener);  
 				
-		//得到按钮实例
+		//----------------------------------------------------------------
+		//得到开始按钮实例
         startbtn = (Button)findViewById(R.id.btn_start);
         startbtn.setBackgroundColor(Color.parseColor("#669933"));
         startbtn.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +162,7 @@ public  class MainActivity extends Activity  {
             }
         });
         
-      //得到按钮实例
+        //得到停止按钮实例
         stopbtn = (Button)findViewById(R.id.btn_stop);
         stopbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +174,7 @@ public  class MainActivity extends Activity  {
             }
         });
         
-      //得到按钮实例
+        //得到休眠按钮实例
         final Button wlockbtn = (Button)findViewById(R.id.btn_wlock);
         wlockbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,8 +195,11 @@ public  class MainActivity extends Activity  {
             }
         });
         
+		//----------------------------------------------------------------
+		//启动定时器
+		StartTimer();
         
-	}//onCreate
+	}//onCreate end
 	
 	//启动定时器
 	private void StartTimer() {
@@ -219,12 +257,12 @@ public  class MainActivity extends Activity  {
 		    						getFontDateTime(), batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				
 		    				Log.i(TAG, "batt_soc:" + batt_soc + " batt_vol:" + batt_vol + 
-		    						" batt_ma:" + batt_ma + " batt_temp:" + batt_temp + "usb_vol:" + usb_vol);
+		    						" batt_ma:" + batt_ma + " batt_temp:" + batt_temp + " usb_vol:" + usb_vol);
 		    				
 		    				file_batt_info = String.format("%6.1f %8d %8d %8d %8d %8d",
 		    						timer_cnt/60, batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				//将数据写入到sdcard
-		    				writeFile2Sdcard(LOG_DFILE_PATH, file_batt_info, true);
+		    				writeFile2Sdcard(save_log_file, file_batt_info, true);
 		    				
 		    				//将数据更新到手机listview界面显示
 		    				sData = new Data(batt_info);
@@ -389,11 +427,8 @@ public  class MainActivity extends Activity  {
             isExit.setButton2("取消", listener);  
             // 显示对话框  
             isExit.show();  
-  
         }  
-          
         return false;  
-          
     }  
 	
     /**监听对话框里面的button点击事件*/  
@@ -414,12 +449,27 @@ public  class MainActivity extends Activity  {
         }  
     }; 
 	
+    /**监听对话框里面的button点击事件*/  
+    DialogInterface.OnClickListener menu_listener = new DialogInterface.OnClickListener()  
+    {  
+        public void onClick(DialogInterface dialog, int which)  
+        {  
+            switch (which)  
+            {  
+            case AlertDialog.BUTTON_POSITIVE:// "确认"按钮退出程序  
+            	dialog.dismiss();  
+                break;    
+            default:  
+                break;  
+            }  
+        }  
+    }; 
 	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-    	menu.add(1, MENU_ABOUT, 1, VerInfo);
-    	menu.add(1, MENU_ABOUT, 2, "帮助");
+    	menu.add(1, MENU_ABOUT, 1, "关于");
+    	menu.add(1, MENU_HELP, 2, "帮助");
     	
         return true;
     }
@@ -433,6 +483,8 @@ public  class MainActivity extends Activity  {
         switch (id){
             case MENU_ABOUT:
             	Log.i(TAG, "click about");
+            	//Toast.makeText(this, "haha,Insert Employee Successfully!", Toast.LENGTH_LONG).show();
+            	dialog_verinfo.show();
                 break;
             case MENU_HELP:
             	Log.i(TAG, "click help");
