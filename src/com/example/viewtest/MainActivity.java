@@ -96,7 +96,6 @@ public  class MainActivity extends Activity  {
 	//true: log保存到/sdcard/battery_data.txt
 	//false: log保存到/sdcard/batterytest/batterydata-$(data).txt
 	private boolean RootLogFile = false;
-	
 	//--------------------------------------------------------------------
     
 	@Override
@@ -294,7 +293,6 @@ public  class MainActivity extends Activity  {
 			myTask.cancel();
 			myTask = null;
 		}
-
 	}
 	
 	 public boolean createDir(String destDirName) {
