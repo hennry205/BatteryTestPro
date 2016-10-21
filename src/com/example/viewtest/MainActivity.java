@@ -60,6 +60,9 @@ public  class MainActivity extends Activity  {
 	private String file_batt_info=null;
 	
 	private final String LOG_FILE_PATH="/sdcard/battery_data.txt";
+	private final String LOG_DIR_PATH="/sdcard/batterytest/";
+	private String LOG_DFILE_PATH;
+	
 	private final String BATT_SOC_PATH = "sys/class/power_supply/battery/capacity";
 	private final String BATT_VOL_PATH = "sys/class/power_supply/battery/voltage_now";
 	private final String BATT_CURRENT_PATH = "sys/class/power_supply/battery/current_now";
@@ -103,7 +106,10 @@ public  class MainActivity extends Activity  {
 		//将ListView与Adapter关联
 		show.setAdapter(myadapter);
 		
-		writeFile2Sdcard("time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
+		createDir(LOG_DIR_PATH);
+		LOG_DFILE_PATH = LOG_DIR_PATH + "battery_data-" + getFileDateTime() + ".txt";
+		Log.i(TAG, "LOG_DFILE_PATH: " + LOG_DFILE_PATH);
+		writeFile2Sdcard(LOG_DFILE_PATH, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		
 		//启动定时器
 		StartTimer();
@@ -218,7 +224,7 @@ public  class MainActivity extends Activity  {
 		    				file_batt_info = String.format("%6.1f %8d %8d %8d %8d %8d",
 		    						timer_cnt/60, batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				//将数据写入到sdcard
-		    				writeFile2Sdcard(file_batt_info, true);
+		    				writeFile2Sdcard(LOG_DFILE_PATH, file_batt_info, true);
 		    				
 		    				//将数据更新到手机listview界面显示
 		    				sData = new Data(batt_info);
@@ -251,6 +257,25 @@ public  class MainActivity extends Activity  {
 
 	}
 	
+	 public static boolean createDir(String destDirName) {
+	        File dir = new File(destDirName);
+	        if (dir.exists()) {
+	            System.out.println("创建目录" + destDirName + "失败，目标目录已经存在");
+	            return false;
+	        }
+	        if (!destDirName.endsWith(File.separator)) {
+	            destDirName = destDirName + File.separator;
+	        }
+	        //创建目录
+	        if (dir.mkdirs()) {
+	            System.out.println("创建目录" + destDirName + "成功！");
+	            return true;
+	        } else {
+	            System.out.println("创建目录" + destDirName + "失败！");
+	            return false;
+	        }
+	}
+	 
 	//执行shell命令函数
 	public void exeCmd(String cmd){         
         try{  
@@ -284,11 +309,11 @@ public  class MainActivity extends Activity  {
     }
     
     //将数据写入到sd卡文件中
-    private void writeFile2Sdcard(String str, boolean append){
+    private void writeFile2Sdcard(String filepath, String str, boolean append){
     	try{
     		FileWriter writer = null;
             
-            writer = new FileWriter(LOG_FILE_PATH, append);     
+            writer = new FileWriter(filepath, append);     
             writer.write(str);
             writer.append("\n");
             writer.flush();
@@ -318,6 +343,25 @@ public  class MainActivity extends Activity  {
 		String date  = c.get(Calendar.DATE)+"/";
 		String day   = c.get(Calendar.HOUR_OF_DAY) + ":";
 		String minute = c.get(Calendar.MINUTE) + ":";
+		String second = c.get(Calendar.SECOND) + "";
+		
+		String dateTime = (month.length()==1?"0"+month:month)
+				+ (date.length()==1?"0"+date:date)
+				+ (day.length()==1?"0"+day:day)
+				+ (minute.length()==1?"0"+minute:minute)
+				+ (second.length()==1?"0"+second:second);
+		
+		return dateTime;
+	}
+	
+	public static String getFileDateTime(){
+		Calendar c = Calendar.getInstance();
+		
+		String year  = c.get(Calendar.YEAR) + "";
+		String month = (c.get(Calendar.MONTH)+1) + "-";
+		String date  = c.get(Calendar.DATE)+"_";
+		String day   = c.get(Calendar.HOUR_OF_DAY) + "-";
+		String minute = c.get(Calendar.MINUTE) + "-";
 		String second = c.get(Calendar.SECOND) + "";
 		
 		String dateTime = (month.length()==1?"0"+month:month)
