@@ -360,8 +360,10 @@ public  class MainActivity extends Activity  {
             writer.close();
             
     	} catch (IOException e){
+    		Log.i(TAG,"IOException Error!"); 
     		e.printStackTrace();
     	} catch (Exception e){
+    		Log.i(TAG,"Exception Error!");
     		e.printStackTrace();
     	} finally {
     		try{
