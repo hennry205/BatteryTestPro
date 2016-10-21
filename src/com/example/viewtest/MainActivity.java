@@ -28,6 +28,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.util.Log;
@@ -93,15 +94,18 @@ public  class MainActivity extends Activity  {
 	final private String VerInfo2 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/";
 	private String VerInfo;
 	
-	//--------------------------------------------------------------------
 	//Config  log保存目录
 	//true: log保存到/sdcard/battery_data.txt
 	//false: log保存到/sdcard/batterytest/batterydata-$(data).txt
 	private boolean RootLogFile = false;
 	
 	private int perTime_sec = 10;
+	
+	private Intent BattIntent;
+
 	//--------------------------------------------------------------------
     
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -152,7 +156,11 @@ public  class MainActivity extends Activity  {
 		dialog_verinfo.setMessage(VerInfo);  
         // 添加选择按钮并注册监听  
 		dialog_verinfo.setButton("确定", menu_listener);  
-				
+		
+		//init intent
+		BattIntent = new Intent(MainActivity.this, BatteryTestService.class); 
+		startService(BattIntent);
+		
 		//----------------------------------------------------------------
 		//得到开始按钮实例
         startbtn = (Button)findViewById(R.id.btn_start);
@@ -163,6 +171,8 @@ public  class MainActivity extends Activity  {
             	Log.i(TAG, "Start Timer.");
             	startbtn.setBackgroundColor(Color.parseColor("#669933"));
             	stopbtn.setBackgroundColor(Color.parseColor("#666666"));
+            	 
+    			startService(BattIntent);
             	StartTimer();
             }
         });
@@ -175,6 +185,8 @@ public  class MainActivity extends Activity  {
             	Log.i(TAG, "Stop Timer.");
             	stopbtn.setBackgroundColor(Color.parseColor("#669933"));
             	startbtn.setBackgroundColor(Color.parseColor("#666666"));
+            	
+            	stopService(BattIntent);
             	StopTimer();
             }
         });
@@ -464,6 +476,7 @@ public  class MainActivity extends Activity  {
             switch (which)  
             {  
             case AlertDialog.BUTTON_POSITIVE:// "确认"按钮退出程序  
+            	stopService(BattIntent);
                 finish();  
                 break;  
             case AlertDialog.BUTTON_NEGATIVE:// "取消"第二个按钮取消对话框  
