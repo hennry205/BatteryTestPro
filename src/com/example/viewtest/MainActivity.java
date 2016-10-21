@@ -45,7 +45,7 @@ public  class MainActivity extends Activity  {
 	private MyShowAdapter myadapter;
 	private Timer myTimer = null;
 	private TimerTask myTask = null;
-	private String TAG="MyVT";
+	private String TAG="BattTest";
 	private Data  sData;
 	private OutputStream out = null;
 	private OutputStream datafile = null;
@@ -103,6 +103,8 @@ public  class MainActivity extends Activity  {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		Log.i(TAG, "BatteryTest start... ");
 		
 		//加载主界面布局activity_main.xml
 		setContentView(R.layout.activity_main);
@@ -373,40 +375,40 @@ public  class MainActivity extends Activity  {
 
     }
     
-	public static String getFontDateTime(){
+	public String getFontDateTime(){
 		Calendar c = Calendar.getInstance();
 		
 		String year  = c.get(Calendar.YEAR) + "";
 		String month = (c.get(Calendar.MONTH)+1) + "-";
 		String date  = c.get(Calendar.DATE)+"/";
-		String day   = c.get(Calendar.HOUR_OF_DAY) + ":";
+		String hour  = c.get(Calendar.HOUR_OF_DAY) + ":";
 		String minute = c.get(Calendar.MINUTE) + ":";
 		String second = c.get(Calendar.SECOND) + "";
 		
-		String dateTime = (month.length()==1?"0"+month:month)
-				+ (date.length()==1?"0"+date:date)
-				+ (day.length()==1?"0"+day:day)
-				+ (minute.length()==1?"0"+minute:minute)
-				+ (second.length()==1?"0"+second:second);
+		String dateTime = (month.length()==1 ? "0"+month : month)
+				+ (date.length()==1 ? "0"+date : date)
+				+ (hour.length()==1 ? "0"+hour : hour)
+				+ (minute.length()==1 ? "0"+minute : minute)
+				+ (second.length()==1 ? "0"+second : second);
 		
 		return dateTime;
 	}
 	
-	public static String getFileDateTime(){
+	public String getFileDateTime(){
 		Calendar c = Calendar.getInstance();
 		
 		String year  = c.get(Calendar.YEAR) + "";
 		String month = (c.get(Calendar.MONTH)+1) + "-";
 		String date  = c.get(Calendar.DATE)+"_";
-		String day   = c.get(Calendar.HOUR_OF_DAY) + "-";
+		String hour   = c.get(Calendar.HOUR_OF_DAY) + "-";
 		String minute = c.get(Calendar.MINUTE) + "-";
 		String second = c.get(Calendar.SECOND) + "";
 		
-		String dateTime = (month.length()==1?"0"+month:month)
-				+ (date.length()==1?"0"+date:date)
-				+ (day.length()==1?"0"+day:day)
-				+ (minute.length()==1?"0"+minute:minute)
-				+ (second.length()==1?"0"+second:second);
+		String dateTime = (month.length()==2 ? "0"+month : month)
+				+ (date.length()==2 ? "0"+date : date)
+				+ (hour.length()==2 ? "0"+hour : hour)
+				+ (minute.length()==2 ? "0"+minute : minute)
+				+ (second.length()==1 ? "0"+second : second);
 		
 		return dateTime;
 	}
