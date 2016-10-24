@@ -75,6 +75,12 @@ public class MyShowAdapter extends BaseAdapter {
         
         return convertView;
 	}
+	
+	public String getViewInfo(int position) {
+       
+		return mData.get(position).getContent();
+        
+	}
 
 }
 

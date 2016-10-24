@@ -89,6 +89,7 @@ public  class MainActivity extends Activity  {
 	private final String LOG_DIR_PATH="/sdcard/batterytest/";
 	private String LOG_DFILE_PATH;
 	private String save_log_file;
+	private String EXPORT_LOG_FILE="/sdcard/export_batt_data.txt";
 	
 	final private String VerInfo1 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/batterytest/";
 	final private String VerInfo2 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/";
@@ -414,6 +415,21 @@ public  class MainActivity extends Activity  {
 
     }
     
+    //导出界面数据到sdcard
+    public void exportData(){
+		int cnt = myadapter.getCount();
+		int i;
+		
+		writeFile2Sdcard(EXPORT_LOG_FILE, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
+		
+		for(i=0; i<cnt; i++){
+			//Log.i(TAG,"Data[" + i + "]=" + myadapter.getViewInfo(i));
+			writeFile2Sdcard(EXPORT_LOG_FILE, myadapter.getViewInfo(i), true);
+		}
+		
+		return;
+	}
+    
 	public String getFontDateTime(){
 		Calendar c = Calendar.getInstance();
 		
@@ -511,7 +527,7 @@ public  class MainActivity extends Activity  {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
     	menu.add(1, MENU_ABOUT, 1, "关于");
-    	menu.add(1, MENU_HELP, 2, "帮助");
+    	menu.add(1, MENU_HELP,  2, "导出到export_batt_data.txt");
     	
         return true;
     }
@@ -529,7 +545,8 @@ public  class MainActivity extends Activity  {
             	dialog_verinfo.show();
                 break;
             case MENU_HELP:
-            	Log.i(TAG, "click help");
+            	Log.i(TAG, "click export");
+            	exportData();
                 break;
         }
         return super.onOptionsItemSelected(item);
