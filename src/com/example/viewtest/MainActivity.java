@@ -256,11 +256,15 @@ public  class MainActivity extends Activity  {
 		    					
 		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_VOL_PATH, false).errorMsg;
 		    					if(cmdErrResult.length() == 0)
-		    						batt_vol = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_VOL_PATH, false).successMsg)/1000;
+		    						batt_vol = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_VOL_PATH, false).successMsg);
+		    					if(batt_vol > 5000)
+		    						batt_vol = batt_vol/1000;
 		    					
 		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_CURRENT_PATH, false).errorMsg;
 		    					if(cmdErrResult.length() == 0)
-		    						batt_ma = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_CURRENT_PATH, false).successMsg)/1000;
+		    						batt_ma = Integer.parseInt(ShellUtils.execCommand(CAT_BATT_CURRENT_PATH, false).successMsg);
+		    					if(batt_ma < -6000 || batt_ma > 5000)
+		    						batt_ma = batt_ma/1000;
 		    					
 		    					cmdErrResult = ShellUtils.execCommand(CAT_BATT_TEMP_PATH, false).errorMsg;
 		    					if(cmdErrResult.length() == 0)
