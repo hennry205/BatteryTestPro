@@ -175,6 +175,7 @@ public  class MainActivity extends Activity  {
             	 
     			startService(BattIntent);
             	StartTimer();
+            	showStatusView("OK");
             }
         });
         
@@ -231,9 +232,7 @@ public  class MainActivity extends Activity  {
 		
 		if(myTimer != null && myTask != null)
 			return;
-		
-		showStatusView("OK");
-		
+				
 		if(myTimer == null)
 			myTimer = new Timer();
 		
@@ -421,6 +420,7 @@ public  class MainActivity extends Activity  {
 		int i;
 		
 		Log.i(TAG,"export count=" + cnt);
+		showStatusView("export " + cnt + " iterms.");
 		
 		writeFile2Sdcard(EXPORT_LOG_FILE, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		
