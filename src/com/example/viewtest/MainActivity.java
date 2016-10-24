@@ -420,6 +420,8 @@ public  class MainActivity extends Activity  {
 		int cnt = myadapter.getCount();
 		int i;
 		
+		Log.i(TAG,"export count=" + cnt);
+		
 		writeFile2Sdcard(EXPORT_LOG_FILE, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		
 		for(i=0; i<cnt; i++){

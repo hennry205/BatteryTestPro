@@ -1,8 +1,6 @@
 package com.example.viewtest;
 
-/**
- * Created by Jay on 2015/9/21 0021.
- */
+
 public class Data {
     private String content;
 
