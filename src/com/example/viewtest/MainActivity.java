@@ -424,7 +424,7 @@ public  class MainActivity extends Activity  {
 		
 		writeFile2Sdcard(EXPORT_LOG_FILE, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		
-		for(i=0; i<cnt; i++){
+		for(i=cnt-1; i>=0; i--){
 			//Log.i(TAG,"Data[" + i + "]=" + myadapter.getViewInfo(i));
 			writeFile2Sdcard(EXPORT_LOG_FILE, myadapter.getViewInfo(i), true);
 		}
