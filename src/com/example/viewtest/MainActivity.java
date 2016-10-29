@@ -82,6 +82,7 @@ public  class MainActivity extends Activity  {
 	
 	final private int MENU_ABOUT = 1;
 	final private int MENU_HELP = 2;
+	final private int MENU_CLEAN_LOG = 3;
 	
 	private AlertDialog dialog_verinfo;
 	
@@ -195,6 +196,10 @@ public  class MainActivity extends Activity  {
         
         //得到休眠按钮实例
         final Button wlockbtn = (Button)findViewById(R.id.btn_wlock);
+        wlock_flag = 1;
+		wlock.acquire();
+		wlock_lcd.acquire();
+		wlockbtn.setText("禁止休眠");
         wlockbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -470,6 +475,11 @@ public  class MainActivity extends Activity  {
 		return dateTime;
 	}
 	
+	public void cleanLogFile(){
+		
+		ShellUtils.execCommand("rm -rf " + LOG_DIR_PATH + "*", false);
+	}
+	
 	@Override  
     public boolean onKeyDown(int keyCode, KeyEvent event)  
     {  
@@ -530,6 +540,7 @@ public  class MainActivity extends Activity  {
         // Inflate the menu; this adds items to the action bar if it is present.
     	menu.add(1, MENU_ABOUT, 1, "关于");
     	menu.add(1, MENU_HELP,  2, "导出到export_batt_data.txt");
+    	menu.add(1, MENU_CLEAN_LOG,  3, "清除Log文件");
     	
         return true;
     }
@@ -549,6 +560,10 @@ public  class MainActivity extends Activity  {
             case MENU_HELP:
             	Log.i(TAG, "click export");
             	exportData();
+                break;
+            case MENU_CLEAN_LOG:
+            	Log.i(TAG, "click clean log");
+            	cleanLogFile();
                 break;
         }
         return super.onOptionsItemSelected(item);
