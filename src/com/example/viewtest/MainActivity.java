@@ -83,6 +83,7 @@ public  class MainActivity extends Activity  {
 	final private int MENU_ABOUT = 1;
 	final private int MENU_HELP = 2;
 	final private int MENU_CLEAN_LOG = 3;
+	private int clean_flag = 0;
 	
 	private AlertDialog dialog_verinfo;
 	
@@ -296,6 +297,12 @@ public  class MainActivity extends Activity  {
 		    				
 		    				file_batt_info = String.format("%6.1f %8d %8d %8d %8d %8d",
 		    						timer_cnt/60, batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
+		    				
+		    				if(clean_flag == 1){
+		    					writeFile2Sdcard(save_log_file, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
+		    					clean_flag = 0;
+		    				}
+		    				
 		    				//将数据写入到sdcard
 		    				writeFile2Sdcard(save_log_file, file_batt_info, true);
 		    				
@@ -478,6 +485,8 @@ public  class MainActivity extends Activity  {
 	public void cleanLogFile(){
 		
 		ShellUtils.execCommand("rm -rf " + LOG_DIR_PATH + "*", false);
+		
+		clean_flag = 1;
 	}
 	
 	@Override  
