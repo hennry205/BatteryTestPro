@@ -93,8 +93,8 @@ public  class MainActivity extends Activity  {
 	private String save_log_file;
 	private String EXPORT_LOG_FILE="/sdcard/export_batt_data.txt";
 	
-	final private String VerInfo1 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/batterytest/";
-	final private String VerInfo2 = "版本V1.1-2016/10/21\n" + "LogDir: /sdcard/";
+	final private String VerInfo1 = "版本V1.1-2016/11/07\n" + "LogDir: /sdcard/batterytest/";
+	final private String VerInfo2 = "版本V1.1-2016/11/07\n" + "LogDir: /sdcard/";
 	private String VerInfo;
 	
 	//Config  log保存目录
