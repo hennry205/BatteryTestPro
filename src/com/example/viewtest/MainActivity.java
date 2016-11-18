@@ -295,13 +295,14 @@ public  class MainActivity extends Activity  {
 		    				Log.i(TAG, "batt_soc:" + batt_soc + " batt_vol:" + batt_vol + 
 		    						" batt_ma:" + batt_ma + " batt_temp:" + batt_temp + " usb_vol:" + usb_vol);
 		    				
-		    				file_batt_info = String.format("%6.1f %8d %8d %8d %8d %8d",
-		    						timer_cnt/60, batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
-		    				
 		    				if(clean_flag == 1){
 		    					writeFile2Sdcard(save_log_file, "time  batt_soc  batt_vol  batt_ma  batt_temp  vbus", false);
 		    					clean_flag = 0;
+		    					timer_cnt = 0;
 		    				}
+		    				
+		    				file_batt_info = String.format("%6.1f %8d %8d %8d %8d %8d",
+		    						timer_cnt/60, batt_soc,batt_vol,batt_ma,batt_temp,usb_vol);
 		    				
 		    				//将数据写入到sdcard
 		    				writeFile2Sdcard(save_log_file, file_batt_info, true);
